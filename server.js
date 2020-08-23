@@ -74,34 +74,30 @@ bot.user.setActivity("YOUSZ'S BUNKER", {type: "WATCHING"});
   
   
   
-  const AntiSpam = require('discord-anti-spam');
-const antiSpam = new AntiSpam({
-	warnThreshold: 3, // Amount of messages sent in a row that will cause a warning.
-	kickThreshold: 7, // Amount of messages sent in a row that will cause a kick.
-	banThreshold: 7, // Amount of messages sent in a row that will cause a ban.
-	muteThreshold: 5, // Amount of messages sent in a row that will cause a mute.
-	maxInterval: 2000, // Amount of time (in milliseconds) in which messages are considered spam.
-	warnMessage: '{@user}, Please stop spamming.', // Message that will be sent in chat upon warning a user.
-	kickMessage: '**{user_tag}** has been kicked for spamming.', // Message that will be sent in chat upon kicking a user.
-	banMessage: '**{user_tag}** has been banned for spamming.', // Message that will be sent in chat upon banning a user.
-	muteMessage: '**{user_tag}** has been muted for spamming.', // Message that will be sent in chat upon muting a user.
-	maxDuplicatesWarning: 7, // Amount of duplicate messages that trigger a warning.
-	maxDuplicatesKick: 10, // Amount of duplicate messages that trigger a warning.
-	maxDuplicatesBan: 12, // Amount of duplicate messages that trigger a warning.
-	maxDuplicatesMute: 9, // Amount of duplicate messages that trigger a warning.
-	// Discord permission flags: https://discord.js.org/#/docs/main/master/class/Permissions?scrollTo=s-FLAGS
-	exemptPermissions: [ 'BAN_MEMBERS'], // Bypass users with any of these permissions(These are not roles so use the flags from link above).
-	ignoreBots: true, // Ignore bot messages.
-	verbose: true, // Extended Logs from module.
-	ignoredUsers: ['byLEVIATHAN#6917'], // Array of User IDs that get ignored.
-	// And many more options... See the documentation.
+   antispam(bot, {
+        limitUntilWarn: 3, // The amount of messages allowed to send within the interval(time) before getting a warn.
+        limitUntilMuted: 4, // The amount of messages allowed to send within the interval(time) before getting a muted.
+        interval: 2000, // The interval(time) where the messages are sent. Practically if member X sent 5+ messages within 2 seconds, he get muted. (1000 milliseconds = 1 second, 2000 milliseconds = 2 seconds etc etc)
+        warningMessage: "if you don't stop from spamming, I'm going to punish you!", // Message you get when you are warned!
+        muteMessage: "was muted since we don't like too much advertisement type people!", // Message sent after member X was punished(muted).
+        maxDuplicatesWarning: 5,// When people are spamming the same message, this will trigger when member X sent over 7+ messages.
+        maxDuplicatesMute: 7, // The limit where member X get muted after sending too many messages(10+).
+        ignoredRoles: ["⚡️ Owner⚡️", "Bot", "🗡 Admin🗡", "⚔️Moderator⚔️"], // The members with this role(or roles) will be ignored if they have it. Suggest to not add this to any random guys. Also it's case sensitive.
+        ignoredMembers: ["byLEVIATHAN#6917"], // These members are directly affected and they do not require to have the role above. Good for undercover pranks.
+        mutedRole: "muted", // Here you put the name of the role that should not let people write/speak or anything else in your server. If there is no role set, by default, the module will attempt to create the role for you & set it correctly for every channel in your server. It will be named "muted".
+        timeMuted: 100 * 600, // This is how much time member X will be muted. if not set, default would be 10 min.
+        logChannel: "AntiSpam-logs" // This is the channel where every report about spamming goes to. If it's not set up, it will attempt to create the channel.
+      });
+      
+  // Rest of your code
 });
+
+
+  bot.on('message', msg => {
+  bot.emit('checkMessage', msg); // This runs the filter on any message bot receives in any guilds.
   
-  
-  bot.on('message', (message) => antiSpam.message(message));
-  
-  
-});
+  // Rest of your code
+})
  
 
 
